@@ -5,7 +5,7 @@ import Confetti from 'react-confetti'
 
 function App() {
 
-  const [numArr, setNumArr] = useState(generateAllNewDice)
+  const [numArr, setNumArr] = useState(() => generateAllNewDice())
 
   const gameWon = numArr.every(die => die.isHeld) && numArr.every(die => die.value === numArr[0].value)
 
@@ -22,11 +22,16 @@ function App() {
 
   // Regenrate Dice onClick of Roll button if isHeld is false
   function rollDice() {
-    setNumArr(prevNumArr => (
+    if (gameWon) {
+      setNumArr(generateAllNewDice())
+    } else {
+      setNumArr(prevNumArr => (
       prevNumArr.map(item => ( 
         item.isHeld ? item : {...item, value: Math.ceil(Math.random() * 6)}
       ))
     ))
+    }
+    
   }
 
   // function that holds the dice based on the id passed and flipping the isHeld property
